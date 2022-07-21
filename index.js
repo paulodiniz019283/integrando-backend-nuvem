@@ -5,6 +5,7 @@ const url = "mongodb://localhost:27017";
 const dbName = "ocean_bancodados_19_07_2022";
 
 async function main() {
+  /*
   console.log("Conectando ao banco de dados...");
 
   const client = await MongoClient.connect(url);
@@ -12,7 +13,7 @@ async function main() {
   const collection = db.collection("herois");
 
   console.log("Banco de dados conectado com sucesso!");
-
+*/
   // Aplicação Backend com Express
 
   const app = express();
@@ -55,17 +56,17 @@ async function main() {
   });
 
   // [POST] /herois -> Create (Criar)
-  app.post("/herois", async function (req, res) {
+  app.post("/herois", function (req, res) {
     // console.log(req.body);
 
     // Acessamos o valor que foi enviado na request
-    const item = req.body;
+    const item = req.body.nome;
 
-    // Insere esse valor na collection
-    await collection.insertOne(item);
+    // Insere esse valor na lista
+    herois.push(item);
 
     // Exibe uma mensagem de sucesso
-    res.send(item);
+    res.send("Item criado com sucesso!");
   });
 
   // [PUT] /herois/:id -> Update (Atualizar)
@@ -74,35 +75,28 @@ async function main() {
     const id = req.params.id;
 
     // Pegar o item a ser atualizado
-    const item = req.body;
+    const item = req.body.nome;
 
-    // Atualizar na collection o valor recebido
-    collection.updateOne(
-      {
-        _id: new ObjectId(id),
-      },
-      {
-        $set: item,
-      }
-    );
+    // Atualizar na lista o valor recebido
+    herois[id - 1] = item;
 
     // Envio uma mensagem de sucesso
-    res.send(item);
+    res.send("Item atualizado com sucesso!");
   });
 
   // [DELETE] /herois/:id -> Delete (Remover)
-  app.delete("/herois/:id", async function (req, res) {
+  app.delete("/herois/:id", function (req, res) {
     // Pegar o ID
     const id = req.params.id;
 
     // Remove o item da lista
-    await collection.deleteOne({ _id: new ObjectId(id) });
+    delete herois[id - 1];
 
     // Exibimos uma mensagem de sucesso
     res.send("Item removido com sucesso!");
   });
 
-  app.listen(3000, function () {
+  app.listen(process.env.PORT || 3000, function () {
     console.log("Aplicação rodando em http://localhost:3000");
   });
 }
