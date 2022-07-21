@@ -104,7 +104,7 @@ async function main() {
     res.send("Item removido com sucesso!");
   });
 
-  app.listen(process.venv.PORT, function () {
+  app.listen(process.env.PORT, function () {
     console.log("Aplicação rodando em http://localhost:3000");
   });
 }
